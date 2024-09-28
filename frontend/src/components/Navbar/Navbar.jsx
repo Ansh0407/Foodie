@@ -1,29 +1,29 @@
-import React, { useContext, useState, useEffect } from 'react';
-import './Navbar.css';
-import { assets } from '../../assets/assets';
+import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { assets } from '../../assets/assets';
 import { StoreContext } from '../../Context/StoreContext';
-import axios from 'axios'; // Import axios
 import LoginPopup from '../LoginPopup/LoginPopup';
+import './Navbar.css';
 
 const Navbar = () => {  
   const [menu, setMenu] = useState("home");
   const { getTotalCartAmount } = useContext(StoreContext);
-  const [userName, setUserName] = useState(""); // State to store user's name
+  const [userName, setUserName] = useState(""); 
   const [showLogin, setShowLogin] = useState(false);
 
-  // Fetch the user's name when the component mounts
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get('http://localhost:5000/auth/user', { withCredentials: true });
-        setUserName(response.data.name); // Set the user name
+        setUserName(response.data.name); 
       } catch (error) {
         console.log('User not logged in');
       }
     };
     fetchUser();
-  }, [showLogin]); // Empty dependency array ensures this runs only once on mount
+  }, [showLogin]);
 
   const handleSuccessfulAuth = () => {
     setShowLogin(false);
@@ -35,10 +35,12 @@ const Navbar = () => {
       {showLogin && <LoginPopup setShowLogin={setShowLogin} onSuccess={handleSuccessfulAuth} />}
       <Link to='/'><img className='logo' src={assets.logo} alt="" /></Link>
       <ul className="navbar-menu">
-        <Link to="/" onClick={() => setMenu("home")} className={`${menu === "home" ? "active" : ""}`}>home</Link>
-        <a href='#explore-menu' onClick={() => setMenu("menu")} className={`${menu === "menu" ? "active" : ""}`}>menu</a>
-        <a href='#app-download' onClick={() => setMenu("mob-app")} className={`${menu === "mob-app" ? "active" : ""}`}>mobile app</a>
-        <a href='#footer' onClick={() => setMenu("contact")} className={`${menu === "contact" ? "active" : ""}`}>contact us</a>
+        <Link to="/" onClick={() => setMenu("home")} className={`${menu === "home" ? "active" : ""}`}>Home</Link>
+        <a href='#explore-menu' onClick={() => setMenu("menu")} className={`${menu === "menu" ? "active" : ""}`}>Menu</a>
+        <a href='#app-download' onClick={() => setMenu("mob-app")} className={`${menu === "mob-app" ? "active" : ""}`}>Mobile app</a>
+        <a href='#footer' onClick={() => setMenu("contact")} className={`${menu === "contact" ? "active" : ""}`}>Contact us</a>
+        <Link to="/my-orders" onClick={() => setMenu("my-orders")} className={`${menu === "my-orders" ? "active" : ""}`}>My Orders</Link>
+
       </ul>
       <div className="navbar-right">
         <img src={assets.search_icon} alt="" />
@@ -59,7 +61,6 @@ const Navbar = () => {
   );
 };
 
-// Logout function
 const handleLogout = async () => {
   try {
     await axios.post('http://localhost:5000/auth/logout', {}, { withCredentials: true });

@@ -1,10 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
-import './PlaceOrder.css'
-import { StoreContext } from '../../Context/StoreContext'
-import { assets } from '../../assets/assets';
+import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { StoreContext } from '../../Context/StoreContext';
+import { assets } from '../../assets/assets';
+import './PlaceOrder.css';
 
 const PlaceOrder = () => {
+    const { getTotalCartAmount, cartItems, food_list } = useContext(StoreContext);
+    const navigate = useNavigate();
 
     const [data, setData] = useState({
         firstName: "",
@@ -16,23 +19,35 @@ const PlaceOrder = () => {
         zipcode: "",
         country: "",
         phone: ""
-    })
-
-    const { getTotalCartAmount, placeOrder } = useContext(StoreContext);
-
-    const navigate = useNavigate();
+    });
 
     const onChangeHandler = (event) => {
-        const name = event.target.name
-        const value = event.target.value
-        setData(data => ({ ...data, [name]: value }))
-    }
+        const name = event.target.name;
+        const value = event.target.value;
+        setData(data => ({ ...data, [name]: value }));
+    };
 
     useEffect(() => {
         if (getTotalCartAmount() === 0) {
-            navigate('/')
+            navigate('/');
         }
-    }, [])
+    }, [getTotalCartAmount, navigate]);
+
+    const handlePlaceOrder = async () => {
+        try {
+            const response = await axios.post('http://localhost:5000/api/orders', {
+                items: cartItems,
+                deliveryInfo: data
+            }, {
+                withCredentials: true 
+            });
+            console.log('Order placed successfully:', response.data);
+            navigate('/my-orders');
+        } catch (error) {
+            console.error('Error placing order:', error);
+        }
+    };
+    
 
     return (
         <div className='place-order'>
@@ -71,11 +86,11 @@ const PlaceOrder = () => {
                         <img src={assets.selector_icon} alt="" />
                         <p>COD ( Cash On Delivery )</p>
                     </div>
-                    <button onClick={() => placeOrder(data)}>PLACE ORDER</button>
+                    <button onClick={handlePlaceOrder}>PLACE ORDER</button>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default PlaceOrder
+export default PlaceOrder;

@@ -1,26 +1,32 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const db = require('./config/db');
-const bcrypt = require('bcryptjs'); 
+const db = require('./config/db'); 
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const verifyJWT = require('./middleware/authMiddleware');
+const orderRoutes = require('./routes/orderRoutes'); 
 
 dotenv.config();
 
 const app = express();
-app.use(bodyParser.json());
-app.use(cookieParser()); 
 
-const corsOptions = {
-    origin: 'http://localhost:5173', 
-    credentials: true, 
-};
-app.use(cors(corsOptions));
+// Middleware
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
+
+// Use order routes under /api
+app.use('/api', orderRoutes);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_key';
 
+// User registration route
 app.post('/auth/register', async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -47,6 +53,7 @@ app.post('/auth/register', async (req, res) => {
     });
 });
 
+// User login route
 app.post('/auth/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -66,7 +73,6 @@ app.post('/auth/login', async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
-
         res.cookie('token', token, { httpOnly: true, sameSite: 'Lax' });
 
         db.query('UPDATE users SET token = ? WHERE id = ?', [token, user.id], (err) => {
@@ -79,13 +85,14 @@ app.post('/auth/login', async (req, res) => {
     });
 });
 
-
-app.get('/protected', verifyJWT, (req, res) => {
-    res.json({ message: 'This is a protected route', userId: req.userId });
+// Protected route example
+app.get('/protected', verifyJWT.protect, (req, res) => {
+    res.json({ message: 'This is a protected route', userId: req.user.id });
 });
 
-app.get('/auth/user', verifyJWT, (req, res) => {
-    db.query('SELECT name FROM users WHERE id = ?', [req.userId], (err, result) => {
+// Get authenticated user information
+app.get('/auth/user', verifyJWT.protect, (req, res) => {
+    db.query('SELECT name FROM users WHERE id = ?', [req.user.id], (err, result) => {
         if (err) {
             return res.status(500).json({ message: 'Database query error', error: err });
         }
@@ -95,11 +102,14 @@ app.get('/auth/user', verifyJWT, (req, res) => {
         res.status(200).json(result[0]);
     });
 });
+
+// User logout route
 app.post('/auth/logout', (req, res) => {
     res.clearCookie('token');
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
+// Start server
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 });
