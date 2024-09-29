@@ -99,6 +99,7 @@ FOOD-DEL/
 │   ├── vite.config.js
 │   └── .gitignore
 └── vercel.json
+```
 
 ## Acknowledgments
 
