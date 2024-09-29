@@ -12,21 +12,26 @@ const orderRoutes = require('./routes/orderRoutes');
 dotenv.config();
 
 const app = express();
-
-// Middleware
+const allowedOrigins = [
+    'http://localhost:5173',
+];
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, origin);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
 }));
 
-// Use order routes under /api
 app.use('/api', orderRoutes);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_key';
 
-// User registration route
 app.post('/auth/register', async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -53,7 +58,6 @@ app.post('/auth/register', async (req, res) => {
     });
 });
 
-// User login route
 app.post('/auth/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -85,12 +89,10 @@ app.post('/auth/login', async (req, res) => {
     });
 });
 
-// Protected route example
 app.get('/protected', verifyJWT.protect, (req, res) => {
     res.json({ message: 'This is a protected route', userId: req.user.id });
 });
 
-// Get authenticated user information
 app.get('/auth/user', verifyJWT.protect, (req, res) => {
     db.query('SELECT name FROM users WHERE id = ?', [req.user.id], (err, result) => {
         if (err) {
@@ -103,13 +105,11 @@ app.get('/auth/user', verifyJWT.protect, (req, res) => {
     });
 });
 
-// User logout route
 app.post('/auth/logout', (req, res) => {
     res.clearCookie('token');
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
-// Start server
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 });
