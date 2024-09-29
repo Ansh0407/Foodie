@@ -1,10 +1,9 @@
 {
   "build": {
-    "command": "cd backend && npm install", // Adjust according to your package manager
-    "output": "backend"
+    "command": "cd backend && npm install",
   },
   "start": {
-    "command": "cd backend && node app.js", // Adjust 'app.js' to your entry point
+    "command": "cd backend && node app.js",
     "output": "backend"
   }
 }
