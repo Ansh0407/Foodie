@@ -1,18 +1,15 @@
 {
-    "projects": [
+    "builds": [
       {
-        "src": "frontend/",
+        "src": "frontend/package.json",
         "use": "@vercel/static-build",
         "config": {
           "distDir": "frontend/build"
-        },
-        "buildCommand": "npm run build --prefix frontend",
-        "outputDirectory": "frontend/build"
+        }
       },
       {
         "src": "backend/app.js",
-        "use": "@vercel/node",
-        "startCommand": "node app.js"
+        "use": "@vercel/node"
       }
     ],
     "routes": [
@@ -26,4 +23,4 @@
       }
     ]
   }
-      
+  
