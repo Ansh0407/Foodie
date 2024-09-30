@@ -16,7 +16,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get('https://ansh-foodie-backend.vercel.api/auth/user', { withCredentials: true });
+        const response = await axios.get('https://ansh-foodie-backend.vercel.app/api/auth/user', { withCredentials: true });
         setUserName(response.data.name); 
       } catch (error) {
         console.log(error);
