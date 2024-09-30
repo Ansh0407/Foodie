@@ -38,6 +38,9 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
+
+        console.log(user.id + " : " + JWT_SECRET)
+
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
         res.cookie('token', token);
         return res.status(200).json({ message: 'Logged in successfully' });
