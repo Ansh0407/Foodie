@@ -64,6 +64,8 @@ exports.logout = (req, res) => {
 
 exports.getUser = async (req, res) => {
     const token = req.cookies.token;
+    console.log('Token:', token);
+
     if (!token) return res.status(401).json({ message: 'Not authenticated' });
 
     try {
@@ -80,6 +82,7 @@ exports.getUser = async (req, res) => {
         return res.status(200).json({ id: user.id, email: user.email, name: user.name });
     } catch (error) {
         console.error('Error in getUser:', error);
-        return res.status(500).json({ message: 'Server error' });
+        return res.status(500).json({ message: error.message || 'Server error' });
     }
 };
+
