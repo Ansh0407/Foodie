@@ -25,9 +25,15 @@ const Navbar = () => {
       fetchUser();
     }, [showLogin]);
 
-  const handleSuccessfulAuth = () => {
-    setShowLogin(false);
-    navigate('/');
+    const handleSuccessfulAuth = async () => {
+      setShowLogin(false);
+      try {
+          const response = await axios.get('https://ansh-foodie-backend.vercel.app/api/auth/user', { withCredentials: true });
+          setUserName(response.data.name);
+      } catch (error) {
+          console.log('Error fetching user:', error.response ? error.response.data : error.message);
+      }
+      navigate('/');
   };
 
   return (
