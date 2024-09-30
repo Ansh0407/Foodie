@@ -11,7 +11,7 @@ exports.register = async (req, res) => {
     const { email, password, name } = req.body;
 
     try {
-        // Check if user already exists
+        
         db.query('SELECT email FROM users WHERE email = ?', [email], async (err, result) => {
             if (err) {
                 console.error('Database query error:', err);
@@ -22,10 +22,8 @@ exports.register = async (req, res) => {
                 return res.status(409).json({ message: 'Email already exists' });
             }
 
-            // Hash the password
             const hashedPassword = await bcrypt.hash(password, 8);
 
-            // Save user to DB
             db.query('INSERT INTO users SET ?', { email, password: hashedPassword, name }, (err) => {
                 if (err) {
                     console.error('Error saving user:', err);
