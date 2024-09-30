@@ -42,8 +42,8 @@ exports.login = async (req, res) => {
         res.cookie('token', token, { httpOnly: true });
         return res.status(200).json({ message: 'Logged in successfully' });
     } catch (error) {
-        console.error('Error in login:', error);
-        return res.status(500).json({ message: error });
+        console.error('Error in login:', error.toString());
+        return res.status(500).json({ message: error.toString() });
     }
 };
 
