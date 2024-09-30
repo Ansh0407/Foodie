@@ -69,7 +69,7 @@ const Navbar = () => {
 
 const handleLogout = async () => {
   try {
-    await axios.post('http://localhost:5000/auth/logout', {}, { withCredentials: true });
+    await axios.post('https://ansh-foodie-backend.vercel.app/api/auth/logout', {}, { withCredentials: true });
     window.location.reload(); 
   } catch (error) {
     console.error('Logout failed');

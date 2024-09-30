@@ -35,7 +35,7 @@ const PlaceOrder = () => {
 
     const handlePlaceOrder = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/orders', {
+            const response = await axios.post('https://ansh-foodie-backend.vercel.app/api/orders', {
                 items: cartItems,
                 deliveryInfo: data
             }, {

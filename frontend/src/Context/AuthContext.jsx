@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/auth/status', { withCredentials: true });
+      const response = await axios.get('https://ansh-foodie-backend.vercel.app/api/auth/status', { withCredentials: true });
       if (response.data.user) {
         setUser(response.data.user);
       }
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:5000/auth/logout', {}, { withCredentials: true });
+      await axios.post('https://ansh-foodie-backend.vercel.app/api/auth/logout', {}, { withCredentials: true });
       setUser(null);
     } catch (error) {
       console.error('Error logging out:', error);

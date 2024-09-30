@@ -8,7 +8,7 @@ const MyOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/orders", {
+        const response = await axios.get("https://ansh-foodie-backend.vercel.app/api/orders", {
           withCredentials: true,
         });
 
