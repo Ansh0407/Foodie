@@ -6,8 +6,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
-console.log('JWT_SECRET:', JWT_SECRET); 
-
 
 exports.register = async (req, res) => {
     const { email, password, name } = req.body;
@@ -40,9 +38,6 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-
-        console.log(user.id + " : " + JWT_SECRET)
-
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
         res.cookie('token', token);
         return res.status(200).json({ message: 'Logged in successfully' });
@@ -65,4 +60,26 @@ exports.isAuthenticated = (req, res) => {
 exports.logout = (req, res) => {
     res.clearCookie('token');
     return res.status(200).json({ message: 'Logged out successfully' });
+};
+
+exports.getUser = async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: 'Not authenticated' });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const userId = decoded.id;
+
+        const [result] = await pool.query('SELECT id, email, name FROM users WHERE id = ?', [userId]);
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const user = result[0];
+        return res.status(200).json({ id: user.id, email: user.email, name: user.name });
+    } catch (error) {
+        console.error('Error in getUser:', error);
+        return res.status(500).json({ message: 'Server error' });
+    }
 };

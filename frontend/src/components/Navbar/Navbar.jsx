@@ -13,17 +13,17 @@ const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false);
 
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get('https://ansh-foodie-backend.vercel.app/api/auth/user', { withCredentials: true });
-        setUserName(response.data.name); 
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUser();
-  }, [showLogin]);
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const response = await axios.get('https://ansh-foodie-backend.vercel.app/api/auth/user', { withCredentials: true });
+          setUserName(response.data.name); 
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchUser();
+    }, [showLogin]);
 
   const handleSuccessfulAuth = () => {
     setShowLogin(false);
