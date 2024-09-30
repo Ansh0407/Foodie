@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { assets } from "../../assets/assets";
 import "./LoginPopup.css";
-import { assets } from "../../assets/assets"; // Adjust path according to your structure
 
 const LoginPopup = ({ setShowLogin }) => {
     const [currState, setCurrState] = useState("Login");
@@ -16,9 +16,9 @@ const LoginPopup = ({ setShowLogin }) => {
             let res;
             if (currState === "Sign Up") {
                 res = await axios.post(
-                    "http://localhost:5000/auth/register",
+                    "https://foodie-green.vercel.app/api/auth/register",
                     { name, email, password },
-                    { withCredentials: true } // Send cookies along with the request
+                    { withCredentials: true } 
                 );
                 console.log(res.data.message);
                 setEmail('')
@@ -27,13 +27,13 @@ const LoginPopup = ({ setShowLogin }) => {
                 setCurrState('Login')
             } else {
                 res = await axios.post(
-                    "http://localhost:5000/auth/login",
+                    "https://foodie-green.vercel.app/api/auth/login",
                     { email, password },
-                    { withCredentials: true } // Send cookies along with the request
+                    { withCredentials: true }
                 );
                 console.log(res.data.message);
                 setShowLogin(false);
-                navigate('/'); // Redirect to the home page after login
+                navigate('/'); 
             }
         } catch (error) {
             console.log(error.response ? error.response.data.message : 'An error occurred');
