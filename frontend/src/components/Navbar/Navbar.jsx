@@ -19,7 +19,8 @@ const Navbar = () => {
         const response = await axios.get('http://localhost:5000/auth/user', { withCredentials: true });
         setUserName(response.data.name); 
       } catch (error) {
-        console.log('User not logged in');
+        console.error('Error in login:', error.toString());
+        return res.status(500).json({ message: error.toString() });
       }
     };
     fetchUser();
