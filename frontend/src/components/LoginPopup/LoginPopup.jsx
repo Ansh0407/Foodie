@@ -16,7 +16,7 @@ const LoginPopup = ({ setShowLogin }) => {
             let res;
             if (currState === "Sign Up") {
                 res = await axios.post(
-                    "https://foodie-green.vercel.app/api/auth/register",
+                    "https://ansh-foodie-backend.vercel.app/api/auth/register",
                     { name, email, password },
                     { withCredentials: true } 
                 );
@@ -27,7 +27,7 @@ const LoginPopup = ({ setShowLogin }) => {
                 setCurrState('Login')
             } else {
                 res = await axios.post(
-                    "https://foodie-green.vercel.app/api/auth/login",
+                    "https://ansh-foodie-backend.vercel.app/api/auth/login",
                     { email, password },
                     { withCredentials: true }
                 );

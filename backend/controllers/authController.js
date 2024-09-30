@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
         if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('token', token);
         return res.status(200).json({ message: 'Logged in successfully' });
     } catch (error) {
         console.error('Error in login:', error.toString());
