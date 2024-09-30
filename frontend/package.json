@@ -26,12 +26,20 @@
     "vite": "^5.4.8"
   },
   "eslintConfig": {
-    "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"],
-    "plugins": ["react-refresh"],
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended"
+    ],
+    "plugins": [
+      "react-refresh"
+    ],
     "rules": {
       "react-refresh/only-export-components": [
         "warn",
-        { "allowConstantExport": true }
+        {
+          "allowConstantExport": true
+        }
       ]
     }
   },
